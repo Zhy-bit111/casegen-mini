@@ -1,0 +1,32 @@
+{
+  "name": "create_user",
+  "method": "POST",
+  "path": "/api/users",
+  "success_status": 200,
+  "reject_status": 400,
+  "fields": [
+    {
+      "name": "name",
+      "type": "str",
+      "required": true,
+      "min": 1,
+      "max": 32,
+      "example": "周浩宇"
+    },
+    {
+      "name": "age",
+      "type": "int",
+      "required": true,
+      "min": 1,
+      "max": 120,
+      "example": 21
+    },
+    {
+      "name": "role",
+      "type": "enum",
+      "required": true,
+      "enum": ["user", "admin"],
+      "example": "user"
+    }
+  ]
+}

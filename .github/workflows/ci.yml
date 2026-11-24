@@ -1,0 +1,33 @@
+name: casegen
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # 零第三方依赖：不装包，直接跑
+      - name: Generate cases and judge
+        run: python casegen.py --spec specs/sample_api.json --out output/report.md --json output/results.json
+
+      - name: Write report to job summary
+        run: cat output/report.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload report
+        uses: actions/upload-artifact@v4
+        with:
+          name: casegen-report
+          path: output/
+
+      # 注意：默认不让「抓到缺陷」使 CI 失败。
+      # 被测样例是故意带缺陷的靶子，报告的价值在于把缺陷逐条指出来。
+      # 若接真实服务，可改用 --fail-on-defect 做回归门禁。
